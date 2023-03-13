@@ -1,17 +1,15 @@
-import React, { useRef } from 'react'
+import { ChangeEvent, FormEvent, useRef, Dispatch } from 'react';
 
-const ItemSearch = ({setInput}) => {
-   const inputRef = useRef();
+const ItemSearch = ({setInput}: {setInput: Dispatch<string>}) => {
+   const inputRef = useRef<HTMLInputElement>(null);
 
-   const handleChange = e => {
-      console.log('e.target.value', e.target.value)
+   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       setInput(e.target.value);
    };
 
-   const handleSubmit = e => {
-      console.log('inputRef.current.value', inputRef.current.value)
+   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setInput(inputRef.current.value);
+      setInput(inputRef?.current?.value as string);
    };
 
    return (

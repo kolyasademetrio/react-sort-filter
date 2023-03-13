@@ -1,90 +1,63 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './App.css';
 import ItemCollection from './containers/ItemCollection'
 import ItemSearch from './components/ItemSearch'
 import ItemFilterSort from './components/ItemFilterSort'
+import items from './store';
 
-const items = [
-   {
-     "id":1,
-     "name":"Appleton's",
-     "category": "Rum",
-     "price": 24.40
-   },
-   {
-     "id":2,
-     "name":"Boodle's",
-     "category": "Gin",
-     "price": 20.10
-   },
-   {
-     "id":3,
-     "name":"Jack Daniel's",
-     "category": "Whiskey",
-     "price": 26
-   },
-   {
-     "id":4,
-     "name":"E.H. Taylor",
-     "category": "Whiskey",
-     "price": 41.82
-   },
-   {
-     "id":5,
-     "name":"Hendrick's",
-     "category": "Gin",
-     "price": 34.50
-   },
-   {
-     "id":6,
-     "name":"Grey Goose",
-     "category": "Vodka",
-     "price": 37.80
-   },
-   {
-     "id":7,
-     "name":"Ketel One",
-     "category": "Vodka",
-     "price": 32.50
-   },
-   {
-     "id":8,
-     "name":"Forteleza Blanco",
-     "category": "Tequila",
-     "price": 46.30
-   },
-   {
-     "id":9,
-     "name":"Espolon Reposado",
-     "category": "Tequila",
-     "price": 22.67
-   },
-   {
-     "id":10,
-     "name":"Plantation Pineapple",
-     "category": "Rum",
-     "price": 31.99
-   }
-];
+export interface ItemType {
+   id: number;
+   name: string;
+   category: string;
+   price: number;
+};
+export const CATEGORY = {
+   ALL: 'all',
+   RUM: 'rum',
+   TEQUILA: 'tequila',
+   GIN: 'gin',
+   WHISKEY: 'whiskey',
+   VODKA: 'vodka',
+};
+
+export const SORTBY = {
+   AZ: 'a-z',
+   PRICE: 'price',
+};
+
+export type CategoriesType =
+   typeof CATEGORY.ALL |
+   typeof CATEGORY.RUM |
+   typeof CATEGORY.TEQUILA |
+   typeof CATEGORY.GIN |
+   typeof CATEGORY.WHISKEY |
+   typeof CATEGORY.VODKA;
+
+export type SortByType = typeof SORTBY.AZ | typeof SORTBY.PRICE;
 
 const App = () => {
-
-   const [allItems, setAllItems] = useState([]);
-   const [input, setInput] = useState('');
-   const [filterByCategory, setFilterByCategory] = useState('all');
-   const [sortBy, setSortBy] = useState('a-z');
+   const [allItems, setAllItems] = useState<ItemType[]>([]);
+   const [input, setInput] = useState<string>('');
+   const [filterByCategory, setFilterByCategory] = useState<CategoriesType>('all');
+   const [sortBy, setSortBy] = useState<SortByType>('a-z');
 
    useEffect(() => {
       setAllItems(items);
    }, []);
 
-   const filterBySearchHandler = (data, input) => {
+   const filterBySearchHandler = (
+      data: ItemType[],
+      input: string
+   ) => {
       return data.filter(item => {
          return item.name.toLowerCase().includes(input.toLowerCase());
       })
    };
 
-   const filterByCategoryHandler = (data, filter) => {
+   const filterByCategoryHandler = (
+      data: ItemType[],
+      filter: CategoriesType
+   ) => {
       if (filter.toLowerCase() !== 'all') {
          return data.filter( item => item.category.toLowerCase() === filter.toLowerCase());
       } else {
@@ -92,7 +65,10 @@ const App = () => {
       }
    };
 
-   const sortByHandler = (data, filter) => {
+   const sortByHandler = (
+      data: ItemType[],
+      filter: SortByType
+   ) => {
       if (filter.toLowerCase() !== 'a-z') {
          return data.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
       } else if (filter.toLowerCase() !== 'price') {
@@ -100,7 +76,7 @@ const App = () => {
       }
    };
 
-   const sortedAndFilteredData = useMemo(() => {
+   const sortedAndFilteredData: ItemType[] | undefined = useMemo(() => {
       const filteredBySearchData = filterBySearchHandler(allItems, input);
       const filteredByCategoryData = filterByCategoryHandler(filteredBySearchData, filterByCategory);
       const result = sortByHandler(filteredByCategoryData, sortBy);
@@ -111,8 +87,8 @@ const App = () => {
    return (
       <div className="app">
          <ItemSearch setInput={setInput}/>
-         <ItemFilterSort setFilterByCategory={setFilterByCategory} setSortBy={setSortBy}/>
-         <ItemCollection allItems={sortedAndFilteredData}/>
+         <ItemFilterSort setFilterByCategory={setFilterByCategory} setSortBy={setSortBy} sortBy={sortBy} />
+         {sortedAndFilteredData && <ItemCollection allItems={sortedAndFilteredData}/>}
       </div>
    );
 };

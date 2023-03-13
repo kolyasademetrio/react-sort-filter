@@ -1,6 +1,6 @@
-import React from 'react'
+import { ItemType } from '../App';
 
-const ItemCollection = ({allItems}) => {
+const ItemCollection = ({allItems}: {allItems: ItemType[]}) => {
    return (
       <div>
          <table>
@@ -15,7 +15,7 @@ const ItemCollection = ({allItems}) => {
                {allItems && allItems.map(({id, price, name, category}) => (
                   <tr key={id}>
                      <td>{name}</td>
-                     <td>${parseFloat(price).toFixed(2)}</td>
+                     <td>${price.toFixed(2)}</td>
                      <td>{category}</td>
                   </tr>
                ))}
