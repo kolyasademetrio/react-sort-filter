@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useRef, Dispatch } from 'react';
 
-const ItemSearch = ({setInput}: {setInput: Dispatch<string>}) => {
+const SearchFilter = ({setInput}: {setInput: Dispatch<string>}) => {
    const inputRef = useRef<HTMLInputElement>(null);
 
    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,4 +27,4 @@ const ItemSearch = ({setInput}: {setInput: Dispatch<string>}) => {
    );
 }
 
-export default ItemSearch;
+export default SearchFilter;
